@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-
+from app.schema import POSTinfo
 app = FastAPI()
 
 post_text = {
@@ -27,3 +27,15 @@ def fetchpost(id: int):
         raise HTTPException(status_code=404, detail="Post not found")
     return post_text[id]
 
+@app.post("/posts")
+def createPost(post : POSTinfo):
+    newpost=  {"title": post.title,"content":post.content}
+    post_text[max(post_text.keys()) +1] = newpost
+    return newpost
+
+@app.delete("/posts/{id}")
+def deletepost(id):
+    if id not in post_text.keys():
+       raise HTTPException(status_code=404,detail="the post wasnt found in the database")
+    del post_text[id]
+    return {"message": "Post deleted successfully"}
