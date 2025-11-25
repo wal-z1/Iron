@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from app.schema import POSTinfo
+from app.schema import *
 app = FastAPI()
 
 post_text = {
@@ -28,10 +28,10 @@ def fetchpost(id: int):
     return post_text[id]
 
 @app.post("/posts")
-def createPost(post : POSTinfo):
+def createPost(post : POSTinfo) -> POSTResponse:
     newpost=  {"title": post.title,"content":post.content}
     post_text[max(post_text.keys()) +1] = newpost
-    return newpost
+    return POSTResponse(**newpost)
 
 @app.delete("/posts/{id}")
 def deletepost(id):
